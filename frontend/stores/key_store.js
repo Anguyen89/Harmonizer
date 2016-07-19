@@ -1,5 +1,5 @@
 var Store =  require("flux/utils").Store;
-var AppDispatcher = require('../dispatcher/dispatcher');
+var AppDispatcher = require('../dispatcher/dispatcher.js');
 var KeyStore = new Store(AppDispatcher);
 
 var KEY_CONSTANTS = require('../constants/key_constants.js');

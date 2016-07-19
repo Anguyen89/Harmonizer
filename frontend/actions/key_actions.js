@@ -1,6 +1,6 @@
 
-var AppDispatcher = require('../dispatcher/dispatcher');
-var KEY_CONSTANTS = require('../constants/key_constants');
+var AppDispatcher = require('../dispatcher/dispatcher.js');
+var KEY_CONSTANTS = require('../constants/key_constants.js');
 
 var KeyActions = {
   keyPressed: function(noteName){
