@@ -1,0 +1,7 @@
+var KEY_CONSTANTS = {
+  KEY_PRESSED: "KEY_PRESSED",
+  KEY_RELEASED: "KEY_RELEASED"
+};
+
+
+module.exports = KEY_CONSTANTS;
