@@ -31361,7 +31361,7 @@
 	      ),
 	      React.createElement(
 	        'h4',
-	        null,
+	        { className: 'directions' },
 	        'Use the keys asdfjkl; to play the organ'
 	      ),
 	      React.createElement(
@@ -38246,7 +38246,7 @@
 	  },
 	
 	  render: function render() {
-	    var className = 'note-key key-${this.props.noteName}';
+	    var className = 'note-key key-${this.props.noteName ';
 	    if (this.state.pressed) {
 	      className += 'pressed';
 	    }

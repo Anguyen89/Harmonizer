@@ -31,7 +31,7 @@ var NoteKey = React.createClass({
   },
 
   render: function(){
-    var className = 'note-key key-${this.props.noteName}';
+    var className = 'note-key key-${this.props.noteName ';
     if (this.state.pressed){
       className += 'pressed';
     }

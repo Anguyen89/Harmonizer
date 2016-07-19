@@ -32,7 +32,7 @@ var Organ = React.createClass({
             Organ Grinder
           </a>
         </h1>
-        <h4>Use the keys asdfjkl; to play the organ</h4>
+        <h4 className="directions">Use the keys asdfjkl; to play the organ</h4>
 
       <div className="keys group">
         {
