@@ -38,8 +38,6 @@ module.exports = function(){
   $(document).on('keyup', (e) => {
     var code = e.keyCode;
     var idx = _heldKeys.indexOf(code);
-    // console.log(NOTE_MAP[code]);
-    console.log(NOTE_MAP);
     if (idx !== 1 ){
       _heldKeys.splice(idx, 1);
       KeyActions.keyReleased(NOTE_MAP[code])
