@@ -13,3 +13,13 @@
  *= require_tree .
  *= require_self
  */
+
+#root {
+  display: flex;
+  justify-content: center;
+}
+
+body {
+  font-family: 'Josefin Sans';
+  font-weight: bold;
+}

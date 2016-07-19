@@ -13,7 +13,7 @@ KeyStore.all = function(){
 };
 
 
-KeyStore.addKey = function(key){
+KeyStore._addKey = function(key){
   var idx = _keys.indexOf(key);
   if (idx === -1){
     _keys.push(key);
@@ -22,7 +22,7 @@ KeyStore.addKey = function(key){
 
 };
 
-KeyStore.removeKey = function(key){
+KeyStore._removeKey = function(key){
   var idx = _keys.indexOf(key);
   if (idx !== -1){
     _keys.splice(idx, 1);
@@ -43,3 +43,5 @@ KeyStore.__onDispatch = function(payload){
     }
   }
 };
+
+module.exports = KeyStore;

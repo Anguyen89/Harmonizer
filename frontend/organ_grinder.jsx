@@ -4,8 +4,10 @@ var ReactDOM = require('react-dom');
 // window.Note = require('./util/notes.js');
 // keyListener = require('./util/add_key_listener.js');
 
+var Organ = require('./components/organ');
+
 
 
 document.addEventListener("DOMContentLoaded", function(){
-  ReactDOM.render(<div>Hello from organ</div>, root);
+  ReactDOM.render(<Organ/>, root);
 });

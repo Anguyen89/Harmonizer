@@ -1,11 +1,12 @@
 var $ = require('jquery');
 var KeyActions = require('../actions/key_actions');
-var TONES = ("../constants/tones");
+var TONES = require("../constants/tones");
 
 
 var NOTE_MAP = {};
 
 var tones = Object.keys(TONES);
+
 
 var validKeys = [
   65, // 'a'
@@ -26,19 +27,21 @@ var _heldKeys = [];
 
 module.exports = function(){
   $(document).on('keydown', (e) => {
-    var code = e.keycode;
+    var code = e.keyCode;
     var valid = validKeys.indexOf(code) !== -1;
-    _heldKeys.push(code);
     if(_heldKeys.indexOf(code) === -1 && valid){
+      _heldKeys.push(code);
       KeyActions.keyPressed(NOTE_MAP[code]);
     }
   });
-  
+
   $(document).on('keyup', (e) => {
-    var code = e.keycode;
-    var valid = _heldKeys.indexOf(code);
-    if (valid !== 1 ){
-      _heldKeys.splice(code, 1);
+    var code = e.keyCode;
+    var idx = _heldKeys.indexOf(code);
+    // console.log(NOTE_MAP[code]);
+    console.log(NOTE_MAP);
+    if (idx !== 1 ){
+      _heldKeys.splice(idx, 1);
       KeyActions.keyReleased(NOTE_MAP[code])
     }
 
