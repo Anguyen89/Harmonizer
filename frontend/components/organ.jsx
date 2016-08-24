@@ -29,7 +29,7 @@ var Organ = React.createClass({
       <div>
         <h1>
           <a className="not-link" href="https://media.giphy.com/media/26vUT3HtrIrWESFcA/giphy.gif">
-            Organ Grinder
+            Harmonizer
           </a>
         </h1>
         <h4 className="directions">Use the keys asdfjkl; to play the organ</h4>
