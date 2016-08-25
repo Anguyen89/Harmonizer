@@ -28,7 +28,7 @@ var Organ = React.createClass({
     return (
       <div>
         <h1>
-          <a className="not-link" href="https://media.giphy.com/media/26vUT3HtrIrWESFcA/giphy.gif">
+          <a className="not-link" >
             Harmonizer
           </a>
         </h1>

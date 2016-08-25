@@ -52,7 +52,7 @@
 	// window.Note = require('./util/notes.js');
 	// keyListener = require('./util/add_key_listener.js');
 	
-	var Organ = __webpack_require__(178);
+	var Organ = __webpack_require__(172);
 	
 	document.addEventListener("DOMContentLoaded", function () {
 	  ReactDOM.render(React.createElement(Organ, null), root);
@@ -21096,59 +21096,79 @@
 
 	'use strict';
 	
-	var Dispatcher = __webpack_require__(180).Dispatcher;
-	module.exports = new Dispatcher();
+	var React = __webpack_require__(1);
+	var AddKeyListener = __webpack_require__(173);
+	var KeyStore = __webpack_require__(182);
+	var TONES = __webpack_require__(200);
+	
+	var NoteKey = __webpack_require__(201);
+	
+	var Organ = React.createClass({
+	  displayName: 'Organ',
+	
+	
+	  getInitialState: function getInitialState() {
+	    return { notes: KeyStore.all() };
+	  },
+	
+	  componentDidMount: function componentDidMount() {
+	    this.keyListener = KeyStore.addListener(this._onChange);
+	    AddKeyListener();
+	  },
+	
+	  _onChange: function _onChange() {
+	    this.setState({ notes: KeyStore.all() });
+	  },
+	
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.keyListener.remove();
+	  },
+	
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'h1',
+	        null,
+	        React.createElement(
+	          'a',
+	          { className: 'not-link' },
+	          'Harmonizer'
+	        )
+	      ),
+	      React.createElement(
+	        'h4',
+	        { className: 'directions' },
+	        'Use the keys asdfjkl; to play the organ'
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'keys group' },
+	        Object.keys(TONES).map(function (noteName, idx) {
+	          return React.createElement(
+	            NoteKey,
+	            { noteName: noteName, key: idx, id: noteName },
+	            noteName
+	          );
+	        })
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = Organ;
 
 /***/ },
 /* 173 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	var ctx = new (window.AudioContext || window.webkitAudioContext)();
-	
-	var createOscillator = function createOscillator(freq) {
-	  var osc = ctx.createOscillator();
-	  osc.type = "sine";
-	  osc.frequency.value = freq;
-	  osc.detune.value = 0;
-	  osc.start(ctx.currentTime);
-	  return osc;
-	};
-	
-	var createGainNode = function createGainNode() {
-	  var gainNode = ctx.createGain();
-	  gainNode.gain.value = 0;
-	  gainNode.connect(ctx.destination);
-	  return gainNode;
-	};
-	
-	var Note = function Note(freq) {
-	  this.oscillatorNode = createOscillator(freq);
-	  this.gainNode = createGainNode();
-	  this.oscillatorNode.connect(this.gainNode);
-	};
-	
-	Note.prototype.start = function () {
-	  // can't explain 0.3, it's a reasonable value
-	  this.gainNode.gain.value = 0.3;
-	};
-	
-	Note.prototype.stop = function () {
-	  this.gainNode.gain.value = 0;
-	};
-	
-	module.exports = Note;
-
-/***/ },
-/* 174 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var $ = __webpack_require__(175);
-	var KeyActions = __webpack_require__(176);
-	var TONES = __webpack_require__(202);
+	var $ = __webpack_require__(174);
+	var KeyActions = __webpack_require__(175);
+	var TONES = __webpack_require__(181);
 	
 	var NOTE_MAP = {};
 	
@@ -21191,7 +21211,7 @@
 	};
 
 /***/ },
-/* 175 */
+/* 174 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*eslint-disable no-unused-vars*/
@@ -31271,13 +31291,13 @@
 
 
 /***/ },
-/* 176 */
+/* 175 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var AppDispatcher = __webpack_require__(172);
-	var KEY_CONSTANTS = __webpack_require__(177);
+	var AppDispatcher = __webpack_require__(176);
+	var KEY_CONSTANTS = __webpack_require__(180);
 	
 	var KeyActions = {
 	  keyPressed: function keyPressed(noteName) {
@@ -31298,109 +31318,16 @@
 	module.exports = KeyActions;
 
 /***/ },
-/* 177 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	var KEY_CONSTANTS = {
-	  KEY_PRESSED: "KEY_PRESSED",
-	  KEY_RELEASED: "KEY_RELEASED"
-	};
-	
-	module.exports = KEY_CONSTANTS;
-
-/***/ },
-/* 178 */
+/* 176 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var React = __webpack_require__(1);
-	var AddKeyListener = __webpack_require__(174);
-	var KeyStore = __webpack_require__(183);
-	var TONES = __webpack_require__(179);
-	
-	var NoteKey = __webpack_require__(201);
-	
-	var Organ = React.createClass({
-	  displayName: 'Organ',
-	
-	
-	  getInitialState: function getInitialState() {
-	    return { notes: KeyStore.all() };
-	  },
-	
-	  componentDidMount: function componentDidMount() {
-	    this.keyListener = KeyStore.addListener(this._onChange);
-	    AddKeyListener();
-	  },
-	
-	  _onChange: function _onChange() {
-	    this.setState({ notes: KeyStore.all() });
-	  },
-	
-	  componentWillUnmount: function componentWillUnmount() {
-	    this.keyListener.remove();
-	  },
-	
-	  render: function render() {
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
-	        'h1',
-	        null,
-	        React.createElement(
-	          'a',
-	          { className: 'not-link', href: 'https://media.giphy.com/media/26vUT3HtrIrWESFcA/giphy.gif' },
-	          'Organ Grinder'
-	        )
-	      ),
-	      React.createElement(
-	        'h4',
-	        { className: 'directions' },
-	        'Use the keys asdfjkl; to play the organ'
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'keys group' },
-	        Object.keys(TONES).map(function (noteName, idx) {
-	          return React.createElement(
-	            NoteKey,
-	            { noteName: noteName, key: idx, id: noteName },
-	            noteName
-	          );
-	        })
-	      )
-	    );
-	  }
-	
-	});
-	
-	module.exports = Organ;
+	var Dispatcher = __webpack_require__(177).Dispatcher;
+	module.exports = new Dispatcher();
 
 /***/ },
-/* 179 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	var TONES = {
-	  C5: 523.25,
-	  D5: 587.33,
-	  E5: 659.25,
-	  F5: 698.46,
-	  G5: 783.99,
-	  A5: 880.00,
-	  B5: 987.77,
-	  C6: 1046.50
-	};
-	
-	module.exports = TONES;
-
-/***/ },
-/* 180 */
+/* 177 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -31412,11 +31339,11 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 	
-	module.exports.Dispatcher = __webpack_require__(181);
+	module.exports.Dispatcher = __webpack_require__(178);
 
 
 /***/ },
-/* 181 */
+/* 178 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -31438,7 +31365,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var invariant = __webpack_require__(182);
+	var invariant = __webpack_require__(179);
 	
 	var _prefix = 'ID_';
 	
@@ -31653,7 +31580,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 182 */
+/* 179 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -31708,20 +31635,52 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 183 */
+/* 180 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	var KEY_CONSTANTS = {
+	  KEY_PRESSED: "KEY_PRESSED",
+	  KEY_RELEASED: "KEY_RELEASED"
+	};
+	
+	module.exports = KEY_CONSTANTS;
+
+/***/ },
+/* 181 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	var TONES = {
+	  C5: 523.25,
+	  D5: 587.33,
+	  E5: 659.25,
+	  F5: 698.46,
+	  G5: 783.99,
+	  A5: 880.00,
+	  B5: 987.77,
+	  C6: 1046.50
+	};
+	
+	module.exports = TONES;
+
+/***/ },
+/* 182 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Store = __webpack_require__(184).Store;
-	var AppDispatcher = __webpack_require__(172);
+	var Store = __webpack_require__(183).Store;
+	var AppDispatcher = __webpack_require__(176);
 	var KeyStore = new Store(AppDispatcher);
 	
-	var KEY_CONSTANTS = __webpack_require__(177);
+	var KEY_CONSTANTS = __webpack_require__(180);
 	
 	var _keys = [];
 	
-	var TONES = __webpack_require__(179);
+	var TONES = __webpack_require__(200);
 	
 	KeyStore.all = function () {
 	  return _keys.slice(0);
@@ -31761,7 +31720,7 @@
 	module.exports = KeyStore;
 
 /***/ },
-/* 184 */
+/* 183 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -31773,15 +31732,15 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 	
-	module.exports.Container = __webpack_require__(185);
-	module.exports.MapStore = __webpack_require__(188);
-	module.exports.Mixin = __webpack_require__(200);
-	module.exports.ReduceStore = __webpack_require__(189);
-	module.exports.Store = __webpack_require__(190);
+	module.exports.Container = __webpack_require__(184);
+	module.exports.MapStore = __webpack_require__(187);
+	module.exports.Mixin = __webpack_require__(199);
+	module.exports.ReduceStore = __webpack_require__(188);
+	module.exports.Store = __webpack_require__(189);
 
 
 /***/ },
-/* 185 */
+/* 184 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -31803,10 +31762,10 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxStoreGroup = __webpack_require__(186);
+	var FluxStoreGroup = __webpack_require__(185);
 	
-	var invariant = __webpack_require__(182);
-	var shallowEqual = __webpack_require__(187);
+	var invariant = __webpack_require__(179);
+	var shallowEqual = __webpack_require__(186);
 	
 	var DEFAULT_OPTIONS = {
 	  pure: true,
@@ -31964,7 +31923,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 186 */
+/* 185 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -31983,7 +31942,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var invariant = __webpack_require__(182);
+	var invariant = __webpack_require__(179);
 	
 	/**
 	 * FluxStoreGroup allows you to execute a callback on every dispatch after
@@ -32045,7 +32004,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 187 */
+/* 186 */
 /***/ function(module, exports) {
 
 	/**
@@ -32100,7 +32059,7 @@
 	module.exports = shallowEqual;
 
 /***/ },
-/* 188 */
+/* 187 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -32121,10 +32080,10 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxReduceStore = __webpack_require__(189);
-	var Immutable = __webpack_require__(199);
+	var FluxReduceStore = __webpack_require__(188);
+	var Immutable = __webpack_require__(198);
 	
-	var invariant = __webpack_require__(182);
+	var invariant = __webpack_require__(179);
 	
 	/**
 	 * This is a simple store. It allows caching key value pairs. An implementation
@@ -32250,7 +32209,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 189 */
+/* 188 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -32271,10 +32230,10 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxStore = __webpack_require__(190);
+	var FluxStore = __webpack_require__(189);
 	
-	var abstractMethod = __webpack_require__(198);
-	var invariant = __webpack_require__(182);
+	var abstractMethod = __webpack_require__(197);
+	var invariant = __webpack_require__(179);
 	
 	var FluxReduceStore = (function (_FluxStore) {
 	  _inherits(FluxReduceStore, _FluxStore);
@@ -32357,7 +32316,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 190 */
+/* 189 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -32376,11 +32335,11 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var _require = __webpack_require__(191);
+	var _require = __webpack_require__(190);
 	
 	var EventEmitter = _require.EventEmitter;
 	
-	var invariant = __webpack_require__(182);
+	var invariant = __webpack_require__(179);
 	
 	/**
 	 * This class should be extended by the stores in your application, like so:
@@ -32540,7 +32499,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 191 */
+/* 190 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -32553,14 +32512,14 @@
 	 */
 	
 	var fbemitter = {
-	  EventEmitter: __webpack_require__(192)
+	  EventEmitter: __webpack_require__(191)
 	};
 	
 	module.exports = fbemitter;
 
 
 /***/ },
-/* 192 */
+/* 191 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -32579,11 +32538,11 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var EmitterSubscription = __webpack_require__(193);
-	var EventSubscriptionVendor = __webpack_require__(195);
+	var EmitterSubscription = __webpack_require__(192);
+	var EventSubscriptionVendor = __webpack_require__(194);
 	
-	var emptyFunction = __webpack_require__(197);
-	var invariant = __webpack_require__(196);
+	var emptyFunction = __webpack_require__(196);
+	var invariant = __webpack_require__(195);
 	
 	/**
 	 * @class BaseEventEmitter
@@ -32757,7 +32716,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 193 */
+/* 192 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -32778,7 +32737,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var EventSubscription = __webpack_require__(194);
+	var EventSubscription = __webpack_require__(193);
 	
 	/**
 	 * EmitterSubscription represents a subscription with listener and context data.
@@ -32810,7 +32769,7 @@
 	module.exports = EmitterSubscription;
 
 /***/ },
-/* 194 */
+/* 193 */
 /***/ function(module, exports) {
 
 	/**
@@ -32864,7 +32823,7 @@
 	module.exports = EventSubscription;
 
 /***/ },
-/* 195 */
+/* 194 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -32883,7 +32842,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var invariant = __webpack_require__(196);
+	var invariant = __webpack_require__(195);
 	
 	/**
 	 * EventSubscriptionVendor stores a set of EventSubscriptions that are
@@ -32973,7 +32932,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 196 */
+/* 195 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -33028,7 +32987,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 197 */
+/* 196 */
 /***/ function(module, exports) {
 
 	/**
@@ -33070,7 +33029,7 @@
 	module.exports = emptyFunction;
 
 /***/ },
-/* 198 */
+/* 197 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -33087,7 +33046,7 @@
 	
 	'use strict';
 	
-	var invariant = __webpack_require__(182);
+	var invariant = __webpack_require__(179);
 	
 	function abstractMethod(className, methodName) {
 	   true ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Subclasses of %s must override %s() with their own implementation.', className, methodName) : invariant(false) : undefined;
@@ -33097,7 +33056,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 199 */
+/* 198 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -38081,7 +38040,7 @@
 	}));
 
 /***/ },
-/* 200 */
+/* 199 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -38098,9 +38057,9 @@
 	
 	'use strict';
 	
-	var FluxStoreGroup = __webpack_require__(186);
+	var FluxStoreGroup = __webpack_require__(185);
 	
-	var invariant = __webpack_require__(182);
+	var invariant = __webpack_require__(179);
 	
 	/**
 	 * `FluxContainer` should be preferred over this mixin, but it requires using
@@ -38204,15 +38163,34 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
+/* 200 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	var TONES = {
+	  C5: 523.25,
+	  D5: 587.33,
+	  E5: 659.25,
+	  F5: 698.46,
+	  G5: 783.99,
+	  A5: 880.00,
+	  B5: 987.77,
+	  C6: 1046.50
+	};
+	
+	module.exports = TONES;
+
+/***/ },
 /* 201 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var Note = __webpack_require__(173);
-	var TONES = __webpack_require__(179);
-	var KeyStore = __webpack_require__(183);
+	var Note = __webpack_require__(202);
+	var TONES = __webpack_require__(200);
+	var KeyStore = __webpack_require__(182);
 	
 	var NoteKey = React.createClass({
 	  displayName: 'NoteKey',
@@ -38265,18 +38243,40 @@
 
 	"use strict";
 	
-	var TONES = {
-	  C5: 523.25,
-	  D5: 587.33,
-	  E5: 659.25,
-	  F5: 698.46,
-	  G5: 783.99,
-	  A5: 880.00,
-	  B5: 987.77,
-	  C6: 1046.50
+	var ctx = new (window.AudioContext || window.webkitAudioContext)();
+	
+	var createOscillator = function createOscillator(freq) {
+	  var osc = ctx.createOscillator();
+	  osc.type = "sine";
+	  osc.frequency.value = freq;
+	  osc.detune.value = 0;
+	  osc.start(ctx.currentTime);
+	  return osc;
 	};
 	
-	module.exports = TONES;
+	var createGainNode = function createGainNode() {
+	  var gainNode = ctx.createGain();
+	  gainNode.gain.value = 0;
+	  gainNode.connect(ctx.destination);
+	  return gainNode;
+	};
+	
+	var Note = function Note(freq) {
+	  this.oscillatorNode = createOscillator(freq);
+	  this.gainNode = createGainNode();
+	  this.oscillatorNode.connect(this.gainNode);
+	};
+	
+	Note.prototype.start = function () {
+	  // can't explain 0.3, it's a reasonable value
+	  this.gainNode.gain.value = 0.3;
+	};
+	
+	Note.prototype.stop = function () {
+	  this.gainNode.gain.value = 0;
+	};
+	
+	module.exports = Note;
 
 /***/ }
 /******/ ]);
